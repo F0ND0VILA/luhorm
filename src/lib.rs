@@ -724,6 +724,8 @@ pub async fn migrate<D: Backend>(pool: &D, migr_dir: impl Into<PathBuf>) -> LuhT
         .await
         .wrap(|| "failed to run migrations table schema sql")?;
 
+    let x = String::from("hello world");
+
     let applied: Vec<(String, String)> = pool
         .fetch_all_raw("SELECT filename, hash FROM _luhorm_migrations ORDER BY id", None)
         .await
