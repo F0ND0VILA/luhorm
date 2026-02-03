@@ -7,13 +7,13 @@
       }
     },
     "presupuestoInicial": {
-      "int": { "min": 999999 "max": 1000000 }
+      "int": { "min": 999999, "max": 1000000 }
     },
     "presupuestoTotal": {
-      "int": { "min": 9999999 "max": 10000000}
-    }
+      "int": { "min": 9999999, "max": 10000000}
+    },
     "mts": {
-      "int": { "min":1 "max": 100}
+      "int": { "min":1, "max": 100}
     },
     "descripcion": {
        "loremParagraphs": {
@@ -22,7 +22,7 @@
         }
     },
     "duracion": {
-      "int": { "min":3 "max": 12}
+      "int": { "min":3, "max": 12}
     }
   }
 }
